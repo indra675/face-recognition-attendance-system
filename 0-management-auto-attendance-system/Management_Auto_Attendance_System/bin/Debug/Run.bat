@@ -1,0 +1,3 @@
+call activate ai_attendance_system_env
+python run.py
+call activate ai_attendance_system_env

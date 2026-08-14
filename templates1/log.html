@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Face Attendance — Today's Log{% endblock %}
+{% block content %}
+<section class="panel">
+  <a href="{{ url_for('index') }}" class="back-link">&larr; Back</a>
+  <h1>Today's Log</h1>
+  <p class="subtitle">{{ today }} &middot; {{ rows|length }} marked present</p>
+
+  {% if rows %}
+  <table class="log-table">
+    <thead>
+      <tr>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row['emp_id'] }}</td>
+        <td>{{ row['name'] }}</td>
+        <td>{{ row['time'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <p>No one has been marked present yet today.</p>
+    <a href="{{ url_for('attendance_page') }}" class="btn btn-primary">Mark attendance</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

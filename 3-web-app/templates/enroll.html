@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Enroll · Face Attendance{% endblock %}
+{% block content %}
+<h1>Enroll Employee</h1>
+<p class="subtitle">Capture 3–5 clear photos of one face at different angles.</p>
+
+<div class="card">
+  <div class="grid2">
+    <div>
+      <label>Employee ID</label>
+      <input type="text" id="empId" placeholder="e.g. EMP001">
+    </div>
+    <div>
+      <label>Full Name</label>
+      <input type="text" id="empName" placeholder="e.g. Indra">
+    </div>
+  </div>
+
+  <div class="video-wrap">
+    <video id="video" autoplay muted playsinline></video>
+  </div>
+
+  <div class="btn-row">
+    <button id="startBtn">Start Camera</button>
+    <button id="captureBtn" class="secondary" disabled>Capture Photo</button>
+    <button id="submitBtn" class="success" disabled>Save Employee</button>
+  </div>
+
+  <div class="thumbs" id="thumbs"></div>
+  <div class="status" id="status"></div>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const startBtn = document.getElementById('startBtn');
+const captureBtn = document.getElementById('captureBtn');
+const submitBtn = document.getElementById('submitBtn');
+const thumbs = document.getElementById('thumbs');
+const statusEl = document.getElementById('status');
+
+let frames = [];
+
+function showStatus(msg, type) {
+  statusEl.textContent = msg;
+  statusEl.className = 'status show ' + type;
+}
+
+startBtn.onclick = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+    captureBtn.disabled = false;
+    startBtn.disabled = true;
+    showStatus('Camera started. Capture 3–5 photos.', 'info');
+  } catch (e) {
+    showStatus('Could not access camera: ' + e.message, 'err');
+  }
+};
+
+captureBtn.onclick = () => {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+  frames.push(dataUrl);
+
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  thumbs.appendChild(img);
+
+  if (frames.length >= 3) submitBtn.disabled = false;
+  showStatus(`Captured ${frames.length} photo(s).`, 'info');
+};
+
+submitBtn.onclick = async () => {
+  const empId = document.getElementById('empId').value.trim();
+  const empName = document.getElementById('empName').value.trim();
+  if (!empId || !empName) {
+    showStatus('Please enter Employee ID and Name.', 'err');
+    return;
+  }
+  submitBtn.disabled = true;
+  showStatus('Saving...', 'info');
+
+  try {
+    const res = await fetch('/api/enroll', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ emp_id: empId, name: empName, frames })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      showStatus(`Enrolled ${empName} using ${data.captured} photo(s).`, 'ok');
+      frames = [];
+      thumbs.innerHTML = '';
+      document.getElementById('empId').value = '';
+      document.getElementById('empName').value = '';
+    } else {
+      showStatus(data.error || 'Failed to enroll.', 'err');
+      submitBtn.disabled = false;
+    }
+  } catch (e) {
+    showStatus('Request failed: ' + e.message, 'err');
+    submitBtn.disabled = false;
+  }
+};
+</script>
+{% endblock %}

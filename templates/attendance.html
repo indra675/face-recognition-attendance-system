@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance · Face Attendance{% endblock %}
+{% block content %}
+<h1>Mark Attendance</h1>
+<p class="subtitle">Look at the camera and scan. Each person is logged once per day.</p>
+
+<div class="card">
+  <div class="video-wrap">
+    <video id="video" autoplay muted playsinline></video>
+  </div>
+  <div class="btn-row">
+    <button id="startBtn">Start Camera</button>
+    <button id="scanBtn" class="success" disabled>Scan &amp; Mark Attendance</button>
+  </div>
+  <div class="status" id="status"></div>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const startBtn = document.getElementById('startBtn');
+const scanBtn = document.getElementById('scanBtn');
+const statusEl = document.getElementById('status');
+
+function showStatus(msg, type) {
+  statusEl.textContent = msg;
+  statusEl.className = 'status show ' + type;
+}
+
+startBtn.onclick = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+    scanBtn.disabled = false;
+    startBtn.disabled = true;
+    showStatus('Camera started.', 'info');
+  } catch (e) {
+    showStatus('Could not access camera: ' + e.message, 'err');
+  }
+};
+
+scanBtn.onclick = async () => {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+  scanBtn.disabled = true;
+  showStatus('Scanning...', 'info');
+
+  try {
+    const res = await fetch('/api/mark_attendance', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ frame: dataUrl })
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      showStatus(data.error || 'Failed to scan.', 'err');
+    } else if (data.results.length === 0) {
+      showStatus('No face processed.', 'err');
+    } else {
+      const msgs = data.results.map(r => {
+        if (r.status === 'marked') return `✅ ${r.name} (${r.emp_id}) marked present at ${r.time}`;
+        if (r.status === 'already_marked') return `ℹ️ ${r.name} already marked today`;
+        return `❓ Face not recognized`;
+      });
+      showStatus(msgs.join(' | '), data.results[0].status === 'unknown' ? 'err' : 'ok');
+    }
+  } catch (e) {
+    showStatus('Request failed: ' + e.message, 'err');
+  } finally {
+    scanBtn.disabled = false;
+  }
+};
+</script>
+{% endblock %}

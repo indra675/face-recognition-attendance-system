@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Face Attendance — Enroll{% endblock %}
+{% block content %}
+<section class="panel">
+  <a href="{{ url_for('index') }}" class="back-link">&larr; Back</a>
+  <h1>Enroll Employee</h1>
+  <p class="subtitle">Fill in the details, then capture a few clear shots of one face.</p>
+
+  <div class="panel-grid">
+    <div class="form-col">
+      <label class="field">
+        <span>Employee ID</span>
+        <input type="text" id="empId" placeholder="e.g. 0001" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Full name</span>
+        <input type="text" id="empName" placeholder="e.g. Priya Sharma" autocomplete="off">
+      </label>
+
+      <div class="capture-count">
+        <span id="frameCount">0</span> photo(s) captured &middot; need at least 3
+      </div>
+
+      <div class="btn-row">
+        <button id="captureBtn" class="btn btn-secondary" type="button">Capture photo</button>
+        <button id="resetBtn" class="btn btn-ghost" type="button">Reset</button>
+      </div>
+
+      <button id="submitBtn" class="btn btn-primary" type="button" disabled>Enroll employee</button>
+
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <div class="cam-col">
+      <div class="cam-frame">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" hidden></canvas>
+      </div>
+      <div class="thumb-row" id="thumbRow"></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/enroll.js') }}"></script>
+{% endblock %}

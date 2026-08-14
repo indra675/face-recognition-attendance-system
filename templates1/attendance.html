@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Face Attendance — Mark Attendance{% endblock %}
+{% block content %}
+<section class="panel panel-narrow">
+  <a href="{{ url_for('index') }}" class="back-link">&larr; Back</a>
+  <h1>Mark Attendance</h1>
+  <p class="subtitle">Look at the camera and scan. You'll only be marked once per day.</p>
+
+  <div class="cam-frame cam-frame-center">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" hidden></canvas>
+  </div>
+
+  <div class="btn-row btn-row-center">
+    <button id="scanBtn" class="btn btn-primary" type="button">Scan face</button>
+  </div>
+
+  <div id="resultBox" class="result-box"></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
+{% endblock %}

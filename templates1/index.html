@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Face Attendance — Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Face Recognition Attendance System</h1>
+  <p class="subtitle">Enroll faces, then mark attendance using your webcam. Everything runs locally on your laptop.</p>
+
+  <div class="card-grid">
+    <a href="{{ url_for('enroll_page') }}" class="card">
+      <div class="card-icon">🧑‍💼</div>
+      <h2>Enroll Employee</h2>
+      <p>Register a new face with ID and name.</p>
+    </a>
+
+    <a href="{{ url_for('attendance_page') }}" class="card">
+      <div class="card-icon">📷</div>
+      <h2>Mark Attendance</h2>
+      <p>Scan a face and log today's attendance.</p>
+    </a>
+
+    <a href="{{ url_for('log_page') }}" class="card">
+      <div class="card-icon">📋</div>
+      <h2>Today's Log</h2>
+      <p>View everyone marked present today.</p>
+    </a>
+  </div>
+</section>
+{% endblock %}

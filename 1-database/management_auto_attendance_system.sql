@@ -1,0 +1,1 @@
+CREATE DATABASE management_auto_attendance_system;

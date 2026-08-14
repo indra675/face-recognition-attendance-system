@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Home · Face Attendance{% endblock %}
+{% block content %}
+<h1>Face Recognition Attendance System</h1>
+<p class="subtitle">Enroll faces, then mark attendance using your webcam. Everything runs locally on your laptop.</p>
+
+<div class="home-links">
+  <a href="/enroll">
+    <div class="icon">🧑‍💼</div>
+    <h3>Enroll Employee</h3>
+    <p>Register a new face with ID and name.</p>
+  </a>
+  <a href="/attendance">
+    <div class="icon">📷</div>
+    <h3>Mark Attendance</h3>
+    <p>Scan a face and log today's attendance.</p>
+  </a>
+  <a href="/log">
+    <div class="icon">📋</div>
+    <h3>Today's Log</h3>
+    <p>View everyone marked present today.</p>
+  </a>
+</div>
+{% endblock %}

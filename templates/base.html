@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Face Attendance{% endblock %}</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1a2440;
+    --panel-light: #22305a;
+    --accent: #4f8cff;
+    --accent-2: #22c55e;
+    --danger: #ef4444;
+    --text: #e6ebf5;
+    --muted: #9aa7c2;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(160deg, #0f172a 0%, #131c34 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    background: rgba(17, 24, 45, 0.9);
+    border-bottom: 1px solid #263258;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav .brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  nav .brand span.dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2);
+  }
+  nav .links a {
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: 22px;
+    font-size: 0.95rem;
+    transition: color 0.15s;
+  }
+  nav .links a:hover, nav .links a.active { color: var(--text); }
+  main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 36px 20px 60px;
+  }
+  h1 { font-size: 1.8rem; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); margin-bottom: 28px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid #263258;
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  input[type=text] {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid #2c3a66;
+    background: #101a34;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+  input[type=text]:focus { outline: 2px solid var(--accent); }
+  label { font-size: 0.85rem; color: var(--muted); display: block; margin-bottom: 4px; }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.1s, opacity 0.15s;
+  }
+  button:hover { opacity: 0.9; }
+  button:active { transform: scale(0.98); }
+  button.secondary { background: var(--panel-light); }
+  button.success { background: var(--accent-2); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  video, canvas.preview {
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius);
+    background: #000;
+    display: block;
+    margin: 0 auto;
+  }
+  .video-wrap { text-align: center; margin-bottom: 16px; }
+  .status {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    display: none;
+  }
+  .status.show { display: block; }
+  .status.ok { background: rgba(34,197,94,0.15); color: #6ee7a0; border: 1px solid rgba(34,197,94,0.3); }
+  .status.err { background: rgba(239,68,68,0.15); color: #f9a8a8; border: 1px solid rgba(239,68,68,0.3); }
+  .status.info { background: rgba(79,140,255,0.15); color: #a9c6ff; border: 1px solid rgba(79,140,255,0.3); }
+  .thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; justify-content: center; }
+  .thumbs img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent-2); }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #263258; font-size: 0.92rem; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .home-links { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .home-links a {
+    display: block;
+    padding: 26px 22px;
+    background: var(--panel);
+    border: 1px solid #263258;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .home-links a:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .home-links .icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .home-links h3 { margin: 0 0 6px; }
+  .home-links p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+  .pill { display:inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight:600; }
+  .pill.marked { background: rgba(34,197,94,0.18); color:#6ee7a0; }
+  @media (max-width: 520px) { .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand"><span class="dot"></span> Face Attendance</div>
+  <div class="links">
+    <a href="/" class="{{ 'active' if active=='home' }}">Home</a>
+    <a href="/enroll" class="{{ 'active' if active=='enroll' }}">Enroll</a>
+    <a href="/attendance" class="{{ 'active' if active=='attendance' }}">Mark Attendance</a>
+    <a href="/log" class="{{ 'active' if active=='log' }}">Today's Log</a>
+  </div>
+</nav>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

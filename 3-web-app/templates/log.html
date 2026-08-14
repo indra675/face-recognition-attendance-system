@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Today's Log · Face Attendance{% endblock %}
+{% block content %}
+<h1>Today's Attendance</h1>
+<p class="subtitle">{{ today }}</p>
+
+<div class="card">
+  {% if rows %}
+  <table>
+    <thead>
+      <tr><th>Employee ID</th><th>Name</th><th>Time</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r['emp_id'] }}</td>
+        <td>{{ r['name'] }}</td>
+        <td>{{ r['time'] }}</td>
+        <td><span class="pill marked">Present</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color: var(--muted);">No attendance marked yet today.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Face Attendance{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="brand">
+      <span class="status-dot"></span>
+      <span>Face Attendance</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}" class="{{ 'active' if active == 'home' else '' }}">Home</a>
+      <a href="{{ url_for('enroll_page') }}" class="{{ 'active' if active == 'enroll' else '' }}">Enroll</a>
+      <a href="{{ url_for('attendance_page') }}" class="{{ 'active' if active == 'attendance' else '' }}">Mark Attendance</a>
+      <a href="{{ url_for('log_page') }}" class="{{ 'active' if active == 'log' else '' }}">Today's Log</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

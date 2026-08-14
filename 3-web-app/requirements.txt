@@ -1,0 +1,8 @@
+Flask==3.0.3
+Pillow==10.4.0
+numpy==1.26.4
+gunicorn==22.0.0
+click
+dlib-bin
+face_recognition_models @ https://github.com/ageitgey/face_recognition_models/archive/refs/heads/master.zip
+setuptools<81
