@@ -13,6 +13,9 @@ This project can be divided into two main sub-systems. Attendance receiver modul
 
 
 > An AI-powered automated attendance system using real-time face recognition and QR code verification, built as a Final Year Project at NRI Institute of Technology.
+> Deployed live on the web.
+
+🔗 **Live API:** https://face-recognition-attendance-system-rp21.onrender.com
 
 
 ## 📌 Project Overview
