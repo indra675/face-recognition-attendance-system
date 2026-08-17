@@ -236,6 +236,7 @@ def api_mark_attendance():
     conn.close()
     return jsonify({"ok": True, "results": results})
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5000)
